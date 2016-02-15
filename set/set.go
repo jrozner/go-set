@@ -1,13 +1,14 @@
 package set
 
+// Set is an interface for all Set implementations to adhere to
 type Set interface {
-	Add(interface{})
-	AddAll([]interface{})
+	Add(Item)
+	AddAll(...Item)
 	Clear()
-	Contains(interface{}) bool
+	Contains(Item) bool
 	IsEmpty() bool
-	Remove(interface{})
-	RemoveAll([]interface{})
+	Remove(Item)
+	RemoveAll(...Item)
 	Size() int
-	Slice() []interface{}
+	Slice() []Item
 }

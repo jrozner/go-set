@@ -5,20 +5,20 @@ import (
 	"sync"
 )
 
-type LinkedHashSet struct {
+type OrderedHashSet struct {
 	mu sync.Mutex
 	HashSet
 	list *list.List
 }
 
-func NewLinkedHashSet() *LinkedHashSet {
-	return &LinkedHashSet{
+func NewOrderedHashSet() *OrderedHashSet {
+	return &OrderedHashSet{
 		HashSet: *NewHashSet(),
 		list:    list.New(),
 	}
 }
 
-func (hs *LinkedHashSet) Add(item Item) {
+func (hs *OrderedHashSet) Add(item Item) {
 	hs.mu.Lock()
 	defer hs.mu.Unlock()
 
@@ -30,7 +30,7 @@ func (hs *LinkedHashSet) Add(item Item) {
 	hs.list.PushBack(item)
 }
 
-func (hs *LinkedHashSet) AddAll(items []Item) {
+func (hs *OrderedHashSet) AddAll(items ...Item) {
 	hs.mu.Lock()
 	defer hs.mu.Unlock()
 	for _, item := range items {
@@ -43,14 +43,14 @@ func (hs *LinkedHashSet) AddAll(items []Item) {
 	}
 }
 
-func (hs *LinkedHashSet) Clear() {
+func (hs *OrderedHashSet) Clear() {
 	hs.mu.Lock()
 	hs.HashSet.Clear()
 	hs.list.Init()
 	hs.mu.Unlock()
 }
 
-func (hs *LinkedHashSet) Remove(item Item) {
+func (hs *OrderedHashSet) Remove(item Item) {
 	hs.mu.Lock()
 	hs.Remove(item)
 	var curr *list.Element
@@ -72,7 +72,7 @@ func (hs *LinkedHashSet) Remove(item Item) {
 	hs.mu.Unlock()
 }
 
-func (hs *LinkedHashSet) RemoveAll(items []Item) {
+func (hs *OrderedHashSet) RemoveAll(items ...Item) {
 	hs.mu.Lock()
 	for _, item := range items {
 		hs.Remove(item)
@@ -95,7 +95,7 @@ func (hs *LinkedHashSet) RemoveAll(items []Item) {
 	hs.mu.Unlock()
 }
 
-func (hs *LinkedHashSet) Slice() []Item {
+func (hs *OrderedHashSet) Slice() []Item {
 	hs.mu.Lock()
 	slice := make([]Item, 0, hs.HashSet.Size())
 	for curr := hs.list.Front(); curr != nil; curr = curr.Next() {
